@@ -24,7 +24,7 @@ month = '1'
 year = '2015'
 day = '1'
 pages = 1
-f = open('  -------  ', 'w') # enter file location
+f = open('floorsheet.txt', 'w') # enter file location
 
 for year in range(2015,2023):
     for month in range(1,13):
