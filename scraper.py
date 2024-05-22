@@ -8,27 +8,27 @@ def load_floorsheet():
     floorsheet =  requests.get('https://merolagani.com/Floorsheet.aspx')
     session_cookie = floorsheet.headers['Set-Cookie'].split()[0]
     soup = BeautifulSoup(floorsheet.text,"lxml")
-
     headers = {
         'cookie': session_cookie,
         'origin': 'https://merolagani.com',
         'referer': 'https://merolagani.com/Floorsheet.aspx',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
         'content-type': 'application/x-www-form-urlencoded',    
-    }
-    
+    }    
     return soup, headers
 
-soup, headers = load_floorsheet()
-month = '1'
-year = '2015'
-day = '1'
-pages = 1
-f = open('floorsheet.txt', 'w') # enter file location
 
+# soup, headers = load_floorsheet()
+# month = '1'
+# year = '2015'
+# day = '1'
+# pages = 1
+f = open('floorsheet.txt', 'w') # enter file location
+day_value=29
 for year in range(2015,2023):
     for month in range(1,13):
-        for day in range(1,33):
+        for day in range(day_value,33):
+            soup, headers = load_floorsheet()
             print('day = ' + str(day) )
             pages = 1
             while 1:
@@ -60,22 +60,21 @@ for year in range(2015,2023):
                     floorsheet_test=requests.post("https://merolagani.com/floorsheet.aspx", headers= headers , data=payload)
                     soup = BeautifulSoup(floorsheet_test.text,"lxml")
                     list = soup.find_all('td',class_=lambda classes:'td-icon' not in classes)
+                   
                     counter = 0
                     pages = pages +1
                     for i in list:
-                        print(i.text.strip(), end="\t")
-                        f.write(i.text.strip() + "\t")
+                        print(i.text.strip(), end=",")
+                        f.write(i.text.strip() + ",")
                         counter = counter + 1
                         if counter==8:
                             print("\n",end='')
                             counter=0
                             f.write("\n")
                 except AttributeError:
-                    pages = 1
-                    page = str(pages)
-                    soup, headers = load_floorsheet()
+                    print("triggered Attribute error")
                     break
-                
+        day_value = 1            
                 
                 
 
