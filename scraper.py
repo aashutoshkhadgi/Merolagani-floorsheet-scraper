@@ -14,7 +14,7 @@ class NoDataException(Exception):
 # load first floorsheet page
 def load_floorsheet():
     try:
-        floorsheet =  requests.get('https://merolagani.com/Floorsheet.aspx',timeout=10)
+        floorsheet =  requests.get('https://merolagani.com/Floorsheet.aspx')
         session_cookie = floorsheet.headers['Set-Cookie'].split()[0]
         soup = BeautifulSoup(floorsheet.text,"lxml")
         headers = {
@@ -75,7 +75,7 @@ def generate_payloads(soup,year,month,day,page):
 
 def extract_floorsheet(headers, data):
     try:
-        floorsheet = requests.post("https://merolagani.com/floorsheet.aspx", headers= headers , data=data ,timeout=10)
+        floorsheet = requests.post("https://merolagani.com/floorsheet.aspx", headers= headers , data=data)
         soup = BeautifulSoup(floorsheet.text,"lxml")
         list = soup.find_all('td',class_=lambda classes:'td-icon' not in classes)
     except requests.exceptions.ReadTimeout:
@@ -144,9 +144,9 @@ if __name__ =='__main__':
     # year = '2015'
     # day = '1'
     # pages = 1    f = open('floorsheet.txt', 'w') # enter file location
-    month_value = 8
-    year_value = 2021
-    day_value=1
+    month_value = 6
+    year_value = 2024
+    day_value=2
     threads = 4
 
     for year in range(year_value,2025):
@@ -163,7 +163,7 @@ if __name__ =='__main__':
                 while break_loop <= 0:
                     try:
                         threads = []
-                        no_of_thread = 16
+                        no_of_thread = 4
                         for i in range(no_of_thread):
                             t=threading.Thread(target=execute,args=(year,month,day,page+i,soup,headers))
                             t.daemon = True
@@ -171,6 +171,7 @@ if __name__ =='__main__':
 
                         for i in threads:
                             i.start()
+                            # time.sleep(0.2)
 
                         for i in threads:
                             i.join()
@@ -178,7 +179,7 @@ if __name__ =='__main__':
                         for i in threads:
                             if hasattr(i,"exception"):
                                 break_loop = 5
-
+                        # exit(9)
                         # execute(year,month,day,page,soup,headers)
                     except NoDataException as e:
                         print("No records found for {0}-{1}-{2} page:{3}".format(year,month,day,page))
@@ -196,6 +197,7 @@ if __name__ =='__main__':
                         break_loop += 1
 
                     page = page + no_of_thread
+            exit(9)
             day_value = 1
         month_value = 1
 
