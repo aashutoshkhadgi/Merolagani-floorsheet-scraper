@@ -144,15 +144,15 @@ if __name__ =='__main__':
     # year = '2015'
     # day = '1'
     # pages = 1    f = open('floorsheet.txt', 'w') # enter file location
-    month_value = 6
-    year_value = 2024
+    month_value = 1
+    year_value = 2022
     day_value=2
     threads = 4
 
-    for year in range(year_value,2025):
-        for month in range(month_value,13):
+    for year in range(year_value,2023):
+        for month in range(month_value,2):
             f = open('floorsheet/floorsheet-'+str(year)+'-'+ str(month) +'.txt' , 'w') # enter file location
-            for day in range(day_value,33):
+            for day in range(day_value,3):
                 page = 1
                 soup, headers = load_floorsheet()
                 consecutive_exceptions = 0
@@ -163,7 +163,7 @@ if __name__ =='__main__':
                 while break_loop <= 0:
                     try:
                         threads = []
-                        no_of_thread = 4
+                        no_of_thread = 1
                         for i in range(no_of_thread):
                             t=threading.Thread(target=execute,args=(year,month,day,page+i,soup,headers))
                             t.daemon = True
